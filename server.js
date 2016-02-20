@@ -47,7 +47,7 @@ app.post('/authenticate', function(req, res) {
             } else {
                 res.json({
                     type: false,
-                    data: "Incorrect email/password"
+                    data: "Email o contraseña incorrectos"
                 });
             }
         }
