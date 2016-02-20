@@ -63,10 +63,10 @@ app.post('/signin', function(req, res) {
                 data: "Error occured: " + err
             });
         } else {
-            if (user) {
+            if (req.body.email) {
                 res.json({
                     type: false,
-                    data: "User already exists!"
+                    data: "Ya existe un usuario con este correo"
                 });
             } else {
                 var userModel = new User();
@@ -102,21 +102,7 @@ app.get('/me', ensureAuthorized, function(req, res) {
         }
     });
 });
-app.get('/test', ensureAuthorized, function(req, res) {
-    User.findOne({token: req.token}, function(err, user) {
-        if (err) {
-            res.json({
-                type: false,
-                data: "Error occured: " + err
-            });
-        } else {
-            res.json({
-                type: true,
-                data: user
-            });
-        }
-    });
-});
+
 
 function ensureAuthorized(req, res, next) {
     var bearerToken;
