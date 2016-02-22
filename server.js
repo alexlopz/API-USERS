@@ -10,7 +10,7 @@ var port = process.env.PORT || 3001;
 var User     = require('./models/User');
 
 // Connect to DB
-mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/usuarios', function(err, res) {
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/paletauser', function(err, res) {
         if(err) {
                 console.log('ERROR: no se realizo la conexion a la db. ' + err);
         } else {
@@ -56,14 +56,14 @@ app.post('/authenticate', function(req, res) {
 
 
 app.post('/signin', function(req, res) {
-    User.findOne({email: req.body.email, password: req.body.password}, function(err, user) {
+    User.findOne({email: req.body.email, password: req.body.password, username: req.body.username }, function(err, user) {
         if (err) {
             res.json({
                 type: false,
                 data: "Error occured: " + err
             });
         } else {
-            if (req.body.email) {
+            if (user) {
                 res.json({
                     type: false,
                     data: "Ya existe un usuario con este correo"
@@ -72,6 +72,7 @@ app.post('/signin', function(req, res) {
                 var userModel = new User();
                 userModel.email = req.body.email;
                 userModel.password = req.body.password;
+                userModel.username = req.body.username;
                 userModel.save(function(err, user) {
                     user.token = jwt.sign(user, process.env.JWT_SECRET || 'contrasenasecreta');
                     user.save(function(err, user1) {
